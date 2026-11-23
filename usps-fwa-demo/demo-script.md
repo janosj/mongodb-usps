@@ -2,12 +2,10 @@
 
 Nov 17, 2026 · @Jonathan Janos
 
-Read the plain text aloud. Every **\[bold bracket\]** is something you do, not something you say. About 8 minutes.
-
 ## Before you start
 
-- **\[Check\]** The app is open on tab 1, and the scan feed is paused.
-- **\[Click Reset Demo Data\]** and wait for the checkmark.
+- Have the app open in your web browser, and pause the scan feed.
+- Initialize the demo by clicking **Reset Demo Data**. Wait for the succes indicator.
 
 ## Open
 
