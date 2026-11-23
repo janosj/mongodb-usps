@@ -53,4 +53,4 @@ usps-fwa-demo/
 - Changing the embedding provider, model, or dimensions: update `.env`, run `npm run setup` (recreates the vector index), then Reset Demo Data.
 - Voyage AI: set `EMBEDDING_PROVIDER=voyage` and `VOYAGE_API_KEY`. The default model is `voyage-3.5` at 1024 dimensions; set
   `EMBEDDING_MODEL` and `EMBEDDING_DIMS` to use a newer one. Check the model name and dimensions against Voyage's current docs.
-- Facility names, accounts, tips, and every figure are invented.
+- Facility names, accounts, tips, and figures are invented.
