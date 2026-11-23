@@ -9,13 +9,13 @@ Read the plain text aloud. Every **\[bold bracket\]** is something you do, not s
 - **\[Check\]** The app is open on tab 1, and the scan feed is paused.
 - **\[Click Reset Demo Data\]** and wait for the checkmark.
 
-## Open (0:00)
+## Open
 
 **\[Switch to slide: Demo: From Surge to Lead Packet\]**
 
 Let's see this working. All the data is simulated. Three parts: fast, smart, flexible.
 
-## Part 1: Be fast (0:30)
+## Part 1: Be fast
 
 Picture scans arriving from facilities all over the country, roughly 3,500 pieces a second on average. Here they're simulated, one per label. Every scan needs a decision, right away. Watch the decision time on each one, and watch the colors.
 
@@ -31,19 +31,19 @@ Each of these simulates an acceptance scan, i.e. the first time USPS takes in a 
 
 **\[Click "Inject counterfeit surge"\]**
 
-Now some bad actor starts issuing fraudulent labels associated with Mailer ID **902144201** - Lakeside Fulfillment. The exact methods are redacted in the public reports, but either the labels themselves have been doctored, or they're tied to an account that never pays.&#32;
+Now some bad actor starts issuing fraudulent labels associated with Mailer ID **902144201** - Lakeside Fulfillment. The exact methods are redacted in the public reports, but either the labels themselves have been doctored, or they're tied to an account that never pays.
 
 A "**Review**" decision indicates a weight mismatch, which shows up immediately in the counterfeit labels.&#32;
 
 A "**Hold**" decision happens once the exposure on the account passes three times its own normal. The mail never slowed down. Every millisecond we save on data retrieval is a millisecond left for the fraud rules.
 
-**Point at the account status under the chart: **The account itself just moved out of good standing, without anyone running a report.
+**Point at the account status under the chart:** The account itself just moved out of good standing, without anyone running a report.
 
-**Where's the data? **Check the *.env* file for any changes, but as initially designed the package scans are stored in the *pieces* collection and the account overages are updated in *accounts*.
+**Where's the data?** Check the *.env* file for any changes, but as initially designed the package scans are stored in the *pieces* collection and the account overages are updated in *accounts*.
 
 ---
 
-## Part 2: Be smart (2:30)
+## Part 2: Be smart
 
 The system caught it. Now, what's behind it? Watch what keyword search misses.
 
@@ -61,14 +61,14 @@ In short: The dots are the scans. The geo query counts how many fall inside this
 
 **\[Click the chip "counterfeit label"\]**
 
-Up to now the system has given you numbers, a spike, and a place. An investigator’s next question is: what people are saying about it? It's pretty realistic to have a bunch free text that piles up across channels, without anyone having tagged it as fraud. Postal Inspectors, carriers (i.e. employees), and customers report problems in their own words. These three report categories (**inspector**, **carrier**, or **customer**)** **are labeled on the cards. These are all stored in the *tips* collection.
+Up to now the system has given you numbers, a spike, and a place. An investigator’s next question is: what people are saying about it? It's pretty realistic to have a bunch free text that piles up across channels, without anyone having tagged it as fraud. Postal Inspectors, carriers (i.e. employees), and customers report problems in their own words. These three report categories (**inspector**, **carrier**, or **customer**) are labeled on the cards. These are all stored in the *tips* collection.
 
 1. **Run the search.** Same phrase, two methods, side by side. “These are reports from inspectors, carriers, and customers: free text, in their own words, with plenty of unrelated noise mixed in. All of it is synthetic.”
 2. **Show what keyword missed.** Point at the right-hand column. No one wrote “counterfeit label.” They wrote “photocopied barcode,” “slip the counter couldn’t validate,” and “postage that failed validation.” These are all the same problem.
 3. **Show the false positive.** Keyword also matched a couple of unrelated reports about return labels. Matching words isn’t the same as matching meaning.
 4. **Name what the AI did.** It found the related reports. It decided nothing. A person still draws the conclusion.
 
-Same reports, searched two ways. One matched words. The other matched meaning.
+Same reports, searched two ways: one matched words, the other matched meaning.
 
 **\[Click "Draft lead packet"\]**
 
@@ -78,7 +78,7 @@ In the default setup no AI model writes it (see code in `backend/lib/leads.js`).
 
 **It saves the packet as a DRAFT** in the `leads` collection, with the evidence, the text, and the cited report IDs. A second click returns the saved one and labels it “generated earlier.” **Redraft** rebuilds it. **"Approve as inspector" **changes the status to APPROVED and records who approved it and when. Nothing else happens. The demo has no case or downstream system. For the story: the packet pulls together the numbers, the place, the device, and related reports into one record with its sources listed, and a person has to approve it. In default mode, “assembled from the evidence” is the accurate phrase, not “AI wrote it.”
 
-## Part 3: Stay flexible (5:30)
+## Part 3: Stay flexible
 
 Incoming data can change shape while the system keeps running. The upstream feed adds two fields, nothing on your side is touched, and the database stores them and answers questions about them right away.
 
@@ -90,12 +90,15 @@ The JSON displayed here is stored in the *pieces* collection. Make sure the feed
 
 **\[Wait about 4 seconds\]**
 
-Two new fields! No migration, no restart, no code change! Click **Roll Back** and the previous V1 data shape is used once again, going forward.&#32;
+Two new fields! No migration, no restart, no code change! Click **Roll Back** and the previous V1 data shape is used once again, going forward.
 
 There are a few things to look at:
 
-- The new V2 shape shows up in the JSON panel, with the new fields highlighted. This part works best if you scroll down a little bit in the JSON window. That will ensure that the new fields are visible when they start coming in.&#32;
-- The lower left has a table that indicates what percentage of the last 500 records has the new fields. This was added dynamically. If you roll back, the numbers with drift back down.&#32;
-- The “Ask about the new field” table groups is aggregating records by `device_id`, which doesn't even exist in V1. The counterfeit labels in the surge share one device, D-4471, so it rises to the top with the most flagged labels. That query works at once, with no migration and no new index. **This is the payoff**: a field that didn’t exist a minute ago already answers a fraud question. **For this part to work, the Fraud Surge has to be active.  **The generator sends about 90% of the counterfeit labels through the one device, D-4471, and gives the other 10% a random device ID (`D-1000` through `D-3999`). So a few other devices pick up one or two flagged labels each. That was done intentionally, so the story doesn’t claim the fraud lives on a single device. (The device is the scanner).&#32;
+- The new V2 shape shows up in the JSON panel, with the new fields highlighted. This part works best if you scroll down a little bit in the JSON window. That will ensure that the new fields are visible when they start coming in.
 
-**Schema Validation: **Use **"Apply required-field guardrail"** and **"Send an incomplete record"** to demonstrate. Flexible where you want it, strict where you need it. Note: the code snippet shows you what rules are enforced. The incomplete record doesn't include "scans", which is a required field that needs to be an array with at least one element. You can see the rules using Compass, but note you might have to disconnect from your cluster and reconnect in order to refresh the metadata.&#32;
+- The lower left has a table that indicates what percentage of the last 500 records has the new fields. This was added dynamically. If you roll back, the numbers with drift back down.
+
+- The “Ask about the new field” table groups is aggregating records by `device_id`, which doesn't even exist in V1. The counterfeit labels in the surge share one device, D-4471, so it rises to the top with the most flagged labels. That query works at once, with no migration and no new index. **This is the payoff**: a field that didn’t exist a minute ago already answers a fraud question. **Note:** For this part to work, the Fraud Surge has to be active. The generator sends about 90% of the counterfeit labels through the one device, D-4471, and gives the other 10% a random device ID (`D-1000` through `D-3999`). So a few other devices pick up one or two flagged labels each. That was done intentionally, so the story doesn’t claim the fraud lives on a single device. (The device is the scanner).
+
+**Schema Validation:** Use **"Apply required-field guardrail"** and **"Send an incomplete record"** to demonstrate. Flexible where you want it, strict where you need it. Note: the code snippet shows you what rules are enforced. The incomplete record doesn't include "scans", which is a required field that needs to be an array with at least one element. You can see the rules using Compass, but note you might have to disconnect from your cluster and reconnect in order to refresh the metadata.
+
