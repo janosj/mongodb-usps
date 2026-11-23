@@ -1,0 +1,17 @@
+# Modify these values to match your environment
+# Copy the file to 'cms/.env'
+
+MONGODB_URI="mongodb+srv://<username>:<password>@<your-cluster>.mongodb.net/?retryWrites=true&w=majority"
+
+OPENAI_API_KEY="<your-OpenAI-API-key>"
+
+# Do not delete. 
+DB_NAME=usps_ecommerce_platform
+COLL_MANIFESTS=shipment_manifests
+COLL_EXCEPTIONS=delivery_exceptions
+
+PORT=5001
+SAFETY_API_PORT=5002
+SAFETY_API_URL=http://localhost:5002/api/v1/compliance-check
+
+

@@ -1,0 +1,38 @@
+# Copy this file to '.env' in this folder (usps-fwa-demo/.env).
+# Every component (backend, mock-scan-feed, frontend) reads this ONE file.
+
+# --- Connection (change it here, and only here) ---
+MONGODB_URI="mongodb+srv://<username>:<password>@<your-cluster>.mongodb.net/?retryWrites=true&w=majority"
+
+# --- Database and collections ---
+DB_NAME=usps_fwa
+COLL_PACKAGES=pieces
+COLL_ACCOUNTS=accounts
+COLL_TIPS=tips
+COLL_LEADS=leads
+COLL_SCAN_METRICS=scan_metrics
+
+# --- Ports ---
+PORT=5001
+FEED_PORT=5003
+FRONTEND_PORT=3000
+
+# --- Embeddings (for search by meaning) ---
+# EMBEDDING_PROVIDER: openai | voyage
+# If you change provider, model, or dimensions, re-run: npm run setup (in backend/) and then Reset Demo Data.
+EMBEDDING_PROVIDER=openai
+OPENAI_API_KEY="<your-OpenAI-API-key>"
+VOYAGE_API_KEY=""
+# Defaults: openai -> text-embedding-3-small (1536 dims); voyage -> voyage-3.5 (1024 dims).
+# Swap in a newer Voyage model here if you prefer, and set the matching dimensions.
+EMBEDDING_MODEL=
+EMBEDDING_DIMS=
+
+# --- Lead packet ---
+# template = instant, assembled from the evidence. llm = adds a short model-written summary (a second or two, then cached).
+LEAD_MODE=template
+OPENAI_CHAT_MODEL=gpt-4o-mini
+
+# --- Decision path ---
+# false = single atomic update, then insert (fastest). true = one multi-document transaction.
+USE_TRANSACTIONS=false

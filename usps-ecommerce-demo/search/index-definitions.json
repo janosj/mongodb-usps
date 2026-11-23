@@ -1,0 +1,44 @@
+Index A: Lexical Search (Lucene Index)
+Target Collection: delivery_exceptions
+Index Name: default
+Configuration (JSON Editor):
+
+{
+  "mappings": {
+    "dynamic": false,
+    "fields": {
+      "tracking_number": {
+        "type": "string"
+      },
+      "un_number": {
+        "type": "string"
+      },
+      "facility_zip": {
+        "type": "string"
+      },
+      "log_narrative": {
+        "type": "string",
+        "analyzer": "lucene.standard"
+      }
+    }
+  }
+}
+
+
+Index B: Vector Search Index
+Target Collection: delivery_exceptions
+Index Name: vector_index
+Configuration (JSON Editor):
+
+{
+  "fields": [
+    {
+      "type": "vector",
+      "path": "embedding",
+      "numDimensions": 1536,
+      "similarity": "cosine"
+    }
+  ]
+}
+
+

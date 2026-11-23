@@ -1,0 +1,23 @@
+db.runCommand({
+  collMod: "shipment_manifests",
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      properties: {
+        safety_audit: {
+          bsonType: "object",
+          required: ["api_version", "status"],
+          properties: {
+            api_version: {
+              enum: ["2.0"],
+              description: "Pub 52 Mandate: Audits must strictly follow Safety API v2.0"
+            }
+          }
+        }
+      }
+    }
+  },
+  validationLevel: "strict",
+  validationAction: "error"
+});
+
